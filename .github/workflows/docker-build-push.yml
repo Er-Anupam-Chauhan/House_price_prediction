@@ -5,14 +5,11 @@ on:
     branches:
       - dev
       - master
-  pull_request:
-    branches:
-      - dev
-      - master
-
+      
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: dev # Specify the dev environment (dev/prod)
 
     steps:
       # Checkout the code
