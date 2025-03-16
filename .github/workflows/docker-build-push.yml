@@ -1,21 +1,27 @@
-FROM rocker/r-ver:3.6.3
+name: Build and Push Docker Image
 
-# Install system dependencies for RGtk2
-RUN apt-get update && apt-get install -y \
-    libgtk2.0-dev \
-    libxml2-dev \
-    libcairo2-dev \
-    xvfb \
-    gtk2.0 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+on:
+  push:
+    branches:
+      - dev
+      - master
+      
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: dev # Specify the dev environment (dev/prod)
 
-# Install R packages (RGtk2 and rattle)
-RUN R -e "install.packages(c('RGtk2', 'rattle'), repos='https://cran.r-project.org')"
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-# Verify installation of rattle
-RUN R -e "library(rattle)"
+      # Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/house_price_pred:latest .
 
-# Set working directory
-WORKDIR /usr/local/src
-
+      # Push the Docker image to Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/house_price_pred:latest
