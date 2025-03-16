@@ -1,7 +1,8 @@
-FROM databricksruntime/r-base:latest  # Use the appropriate Databricks R base image
+FROM databricksruntime  # Databricks dbfuse base image
 
-# Install system dependencies for RGtk2
+# Install R and dependencies
 RUN apt-get update && apt-get install -y \
+    r-base \
     libgtk2.0-dev \
     libxml2-dev \
     libcairo2-dev \
